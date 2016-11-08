@@ -3,29 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Move : MonoBehaviour {
-	public float m_fProbeLength = 5.0f;
+	public float m_fProbeLength = 10.0f;
 	public float m_fCollisionRadius = 1.0f;
 	public float m_fNeighborRange = 10.0f;
-	public float m_fSightAngle = 110.0f;
-	public float m_fMaxSpeed = 5.0f;
+	public float m_fSightAngle = 100.0f;
+	public float m_fMaxSpeed = 10.0f;
 //	public float m_fAcc = 1.0f;
 //	public float m_fRot;
 	public float m_fForwardForce = 5.0f;
-	public float m_fMaxRot = 0.5f;
-	public float m_fSeparationFactor = 1.0f;
-	public float m_fCohesionFactor = 1.0f;
-	public float m_fAlignmentFactor = 1.0f;
+	public float m_fMaxRot = 0.1f;
+	public float m_fSeparationFactor = 3.0f;
+	public float m_fCohesionFactor = 0.3f;
+	public float m_fAlignmentFactor = 0.0f;
 	public int m_iTeam = 0;
 	public string m_sAgentType = null;
 	private Agent m_Agent;
-	public Transform m_targetTr;
-
+//	public Transform m_targetTr;
+	private Vector3 m_vForward;
+	private bool go = false;
 	void Awake () {
 		m_Agent = new Agent ();
 		m_Agent.m_AgentTrans = transform;
 //		m_Agent.m_fAcc = m_fAcc;
 		m_Agent.m_iTeam = m_iTeam;
 		m_Agent.m_sAgentType = m_sAgentType;
+		m_vForward = transform.forward;
 	}
 
 	void Start () {
@@ -36,6 +38,9 @@ public class Move : MonoBehaviour {
 	}
 	
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.A)) {
+			go = true;
+		}
 		// parameters
 		m_Agent.m_fProbeLength = m_fProbeLength;
 		m_Agent.m_fCollisionRadius = m_fCollisionRadius;
@@ -47,12 +52,13 @@ public class Move : MonoBehaviour {
 		m_Agent.m_fCohesionFactor = m_fCohesionFactor;
 		m_Agent.m_fAlignmentFactor = m_fAlignmentFactor;
 		// 往前的吸引力
-		m_Agent.m_vTargetPos = transform.position + m_targetTr.forward * m_fForwardForce;
-		Vector3 seekVec = AI.Seek (m_Agent.m_vTargetPos, ref m_Agent);
-		Vector3 turnVec = AI.CollisionAvoid (ref m_Agent);
-		Vector3 flockVec = AI.Flocking (ref m_Agent);
-		AI.Move (seekVec + turnVec + flockVec, ref m_Agent);
-
+		m_Agent.m_vTargetPos = transform.position + m_vForward * m_fForwardForce;
+		if (go) {
+			Vector3 seekVec = AI.Seek (m_Agent.m_vTargetPos, ref m_Agent);
+			Vector3 turnVec = AI.CollisionAvoid (ref m_Agent);
+			Vector3 flockVec = AI.Flocking (ref m_Agent);
+			AI.Move (seekVec + turnVec + flockVec, ref m_Agent);
+		}
 	}
 
 	void OnDrawGizmos () {
