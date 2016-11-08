@@ -9,7 +9,7 @@ public class ObjPoor  :MonoBehaviour{
 	private GameObject RePf;
 	private string Path;
 	private string BornPath;
-
+	private Vector3 QuatV3;
 	public int MaxAmount ;
 	public int StartAmount;
 
@@ -26,7 +26,7 @@ public class ObjPoor  :MonoBehaviour{
 		nowAmount = Data.mnowAmount;
 		needPeople = Data.mneedPeople;
 		BornPath = "BornPoint/" + Data.mBornPointName;
-
+		QuatV3 = Data.mQuatV3;
 	}
 
 
@@ -62,13 +62,14 @@ public class ObjPoor  :MonoBehaviour{
 				GameObject AgalnPro = m_ObjPoor.Dequeue ();
 				BornPos (BronPos);
 				AgalnPro.transform.position = new Vector3 (OffA [0], 0.5f, OffA [1]);
+				AgalnPro.transform.Rotate (QuatV3);
 				AgalnPro.SetActive (true);
 				nowAmount++;
 				needAmount --;
 				Debug.Log ("使用現有");
 			} else {
 				BornPos (BronPos);
-				Instantiate (RePf, new Vector3 (OffA [0], 0.5f, OffA [1]), Quaternion.identity);
+				Instantiate (RePf, new Vector3 (OffA [0], 0.5f, OffA [1]),Quaternion.Euler(QuatV3));
 				nowAmount++;
 				needAmount --;
 				Debug.Log ("新創");
@@ -101,12 +102,13 @@ public class ObjPoor  :MonoBehaviour{
 				GameObject AgalnPro = m_ObjPoor.Dequeue ();
 				BornPos (BronPos);
 				AgalnPro.transform.position = new Vector3 (OffA [0], 0.5f, OffA [1]);
+				AgalnPro.transform.Rotate (QuatV3);
 				AgalnPro.SetActive (true);
 				nowAmount++;
 				Debug.Log ("使用現有");
 			} else {
 				BornPos (BronPos);
-				Instantiate (RePf, new Vector3 (OffA [0], 0.5f, OffA [1]), Quaternion.identity);
+				Instantiate (RePf, new Vector3 (OffA [0], 0.5f, OffA [1]), Quaternion.Euler(QuatV3));
 				nowAmount++;
 				Debug.Log ("新創");
 			}

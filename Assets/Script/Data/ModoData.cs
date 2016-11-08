@@ -8,6 +8,7 @@ public class ModoDataBase  {
 	public int mStartAmount;
 	public int mnowAmount;
 	public int mneedPeople;
+	public Vector3 mQuatV3;
 }
 public class ModoData1:ModoDataBase{
 	public ModoData1(){
@@ -17,6 +18,7 @@ public class ModoData1:ModoDataBase{
 		mStartAmount=10;
 		mnowAmount=0;
 		mneedPeople=0;
+		mQuatV3=new Vector3(0.0f,180.0f,0.0f);
 	}
 }
 
@@ -28,6 +30,7 @@ public class ModoData2:ModoDataBase{
 		mStartAmount=10;
 		mnowAmount=0;
 		mneedPeople=0;
+		mQuatV3=new Vector3(0.0f,180.0f,0.0f);
 	}
 }
 public class ModoData3:ModoDataBase{
@@ -38,6 +41,7 @@ public class ModoData3:ModoDataBase{
 		mStartAmount=10;
 		mnowAmount=0;
 		mneedPeople=0;
+		mQuatV3=new Vector3(0.0f,0.0f,0.0f);
 	}
 }
 public class ModoData4:ModoDataBase{
@@ -48,5 +52,6 @@ public class ModoData4:ModoDataBase{
 		mStartAmount=30;
 		mnowAmount=0;
 		mneedPeople=0;
+		mQuatV3=new Vector3(0.0f,0.0f,0.0f);
 	}
 }
