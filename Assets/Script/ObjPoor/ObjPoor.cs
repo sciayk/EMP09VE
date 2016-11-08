@@ -35,7 +35,7 @@ public class ObjPoor  :MonoBehaviour{
 
 
 
-	public  void Awake(){
+	public void Awake(){
 		RePf = Resources.Load (Path) as GameObject;
 		BronPos = Resources.Load (BornPath)as GameObject;
 
@@ -45,15 +45,11 @@ public class ObjPoor  :MonoBehaviour{
 			Soild.SetActive (false);
 		}
 	}
-		
+
+
 	// Update is called once per frame
 	public  void Updata () {
-		if (nowAmount < MaxAmount) {
-			AutoBorn ();
-		} else {
-			Debug.Log ("滿人");
-		}
-
+		AutoBorn ();
 	}
 
 	void InstancePeople(int needAmount){
@@ -112,7 +108,10 @@ public class ObjPoor  :MonoBehaviour{
 				nowAmount++;
 				Debug.Log ("新創");
 			}
+		}else {
+			Debug.Log ("滿人");
 		}
+
 	}
 	public void StartBorn(){
 		needPeople=int.Parse(INSoild.text)-1;

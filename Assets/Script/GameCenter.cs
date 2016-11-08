@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class GameCenter : MonoBehaviour {
+	
 	ObjPoor m_ObjPoor1=new ObjPoor(new ModoData1());
 	ObjPoor m_ObjPoor2=new ObjPoor(new ModoData3());
 	ObjPoor m_ObjPoor3=new ObjPoor(new ModoData2());
@@ -16,9 +17,23 @@ public class GameCenter : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		m_ObjPoor1.Updata();
-		m_ObjPoor2.Updata();
-		m_ObjPoor3.Updata();
-		m_ObjPoor4.Updata();
+		
+		if (TimeClock(0.2f)) {
+			m_ObjPoor1.Updata ();
+			m_ObjPoor2.Updata ();
+			m_ObjPoor3.Updata ();
+			m_ObjPoor4.Updata ();
+		}
+	}
+
+
+
+	protected float T1 = 0;
+	public  bool TimeClock (float needTime){
+		if ((Time.time-T1) > needTime) {
+			T1 = Time.time;
+			return true;
+		}
+		return false;
 	}
 }
