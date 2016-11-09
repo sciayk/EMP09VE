@@ -58,7 +58,7 @@ public class ObjPoor  :MonoBehaviour{
 				GameObject AgalnPro = m_ObjPoor.Dequeue ();
 				BornPos (BronPos);
 				AgalnPro.transform.position = new Vector3 (OffA [0], 0.5f, OffA [1]);
-				AgalnPro.transform.Rotate (QuatV3);
+				//AgalnPro.transform.Rotate (QuatV3);
 				AgalnPro.SetActive (true);
 				nowAmount++;
 				needAmount --;
@@ -104,7 +104,9 @@ public class ObjPoor  :MonoBehaviour{
 				Debug.Log ("使用現有");
 			} else {
 				BornPos (BronPos);
-				Instantiate (RePf, new Vector3 (OffA [0], 0.5f, OffA [1]), Quaternion.Euler(QuatV3));
+				GameObject AgalnPro=Instantiate (RePf);
+				AgalnPro.transform.position = new Vector3 (OffA [0], 0.5f, OffA [1]);
+				AgalnPro.transform.Rotate (QuatV3);
 				nowAmount++;
 				Debug.Log ("新創");
 			}
@@ -113,14 +115,14 @@ public class ObjPoor  :MonoBehaviour{
 		}
 
 	}
-	public void StartBorn(){
-		needPeople=int.Parse(INSoild.text)-1;
-		if ((nowAmount + needPeople) < MaxAmount) {
-			InstancePeople (needPeople);
-		} else {
-			Debug.Log ("你不能擁有那麼多，人數超過上限");
-		}
-	}
+//	public void StartBorn(){
+//		needPeople=int.Parse(INSoild.text)-1;
+//		if ((nowAmount + needPeople) < MaxAmount) {
+//			InstancePeople (needPeople);
+//		} else {
+//			Debug.Log ("你不能擁有那麼多，人數超過上限");
+//		}
+//	}
 }
 
 
