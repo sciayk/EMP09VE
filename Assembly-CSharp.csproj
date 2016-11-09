@@ -56,6 +56,7 @@
      <Compile Include="Assets\Script\KeywordManager.cs" />
      <Compile Include="Assets\Script\Magic\MagicSet.cs" />
      <Compile Include="Assets\Script\ObjPoor\ObjPoor.cs" />
+     <Compile Include="Assets\gg.cs" />
      <None Include="Assets\ReSources\MagicSet.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity5.4.1/Unity5.4.1.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
