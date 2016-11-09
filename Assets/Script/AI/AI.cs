@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AI : MonoBehaviour {
+public class AI {
+
 	public static void Move (Vector3 forceVec, ref Agent agent) {
 		float fSpeed = Vector3.Dot(forceVec, agent.m_AgentTrans.forward);
 		if (fSpeed > agent.m_fMaxSpeed) {
@@ -10,7 +11,7 @@ public class AI : MonoBehaviour {
 		} else if (fSpeed < 0.0f) {
 			fSpeed = 0.0f;
 		}
-		Debug.Log ("Speed: " + fSpeed);
+//		Debug.Log ("Speed: " + fSpeed);
 		agent.m_fSpeed = fSpeed;
 
 		Vector3 vDir = forceVec.normalized;

@@ -20,6 +20,10 @@ public class Move : MonoBehaviour {
 	private Agent m_Agent;
 //	public Transform m_targetTr;
 	private Vector3 m_vForward;
+	private Vector3 seekVec;
+	private Vector3 turnVec;
+	private Vector3 flockVec;
+
 	private bool go = false;
 	void Awake () {
 		m_Agent = new Agent ();
@@ -35,12 +39,6 @@ public class Move : MonoBehaviour {
 		int iIndex = Manager.Instance ().GetAgentList ().Count;
 		m_Agent.m_iIndex = iIndex;
 		Manager.Instance ().AddAgent (m_Agent);
-	}
-	
-	void Update () {
-		if (Input.GetKeyDown (KeyCode.A)) {
-			go = true;
-		}
 		// parameters
 		m_Agent.m_fProbeLength = m_fProbeLength;
 		m_Agent.m_fCollisionRadius = m_fCollisionRadius;
@@ -51,13 +49,35 @@ public class Move : MonoBehaviour {
 		m_Agent.m_fSeparationFactor = m_fSeparationFactor;
 		m_Agent.m_fCohesionFactor = m_fCohesionFactor;
 		m_Agent.m_fAlignmentFactor = m_fAlignmentFactor;
-		// 往前的吸引力
-		m_Agent.m_vTargetPos = transform.position + m_vForward * m_fForwardForce;
+
+//		StartCoroutine (SteeringBehavior ());
+	}
+	
+	void Update () {
+		if (Input.GetKeyDown (KeyCode.A)) {
+			go = true;
+		}
+
 		if (go) {
-			Vector3 seekVec = AI.Seek (m_Agent.m_vTargetPos, ref m_Agent);
-			Vector3 turnVec = AI.CollisionAvoid (ref m_Agent);
-			Vector3 flockVec = AI.Flocking (ref m_Agent);
+			// 往前的吸引力
+			m_Agent.m_vTargetPos = transform.position + m_vForward * m_fForwardForce;
+			seekVec = AI.Seek (m_Agent.m_vTargetPos, ref m_Agent);
+			turnVec = AI.CollisionAvoid (ref m_Agent);
+			flockVec = AI.Flocking (ref m_Agent);
 			AI.Move (seekVec + turnVec + flockVec, ref m_Agent);
+		}
+	}
+
+	IEnumerator SteeringBehavior () {
+		while (true) {
+			// 往前的吸引力
+			m_Agent.m_vTargetPos = transform.position + m_vForward * m_fForwardForce;
+			seekVec = AI.Seek (m_Agent.m_vTargetPos, ref m_Agent);
+			turnVec = AI.CollisionAvoid (ref m_Agent);
+			flockVec = AI.Flocking (ref m_Agent);
+			AI.Move (seekVec + turnVec + flockVec, ref m_Agent);
+
+			yield return new WaitForSeconds (0.02f);
 		}
 	}
 
