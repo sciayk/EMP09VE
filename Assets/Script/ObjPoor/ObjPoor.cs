@@ -62,13 +62,13 @@ public class ObjPoor  :MonoBehaviour{
 				AgalnPro.SetActive (true);
 				nowAmount++;
 				needAmount --;
-				Debug.Log ("使用現有");
+			//	Debug.Log ("使用現有");
 			} else {
 				BornPos (BronPos);
 				Instantiate (RePf, new Vector3 (OffA [0], 0.5f, OffA [1]),Quaternion.Euler(QuatV3));
 				nowAmount++;
 				needAmount --;
-				Debug.Log ("新創");
+			//	Debug.Log ("新創");
 			}
 		}
 	}
@@ -101,17 +101,15 @@ public class ObjPoor  :MonoBehaviour{
 				AgalnPro.transform.Rotate (QuatV3);
 				AgalnPro.SetActive (true);
 				nowAmount++;
-				Debug.Log ("使用現有");
+				//Debug.Log ("使用現有");
 			} else {
 				BornPos (BronPos);
 				GameObject AgalnPro=Instantiate (RePf);
 				AgalnPro.transform.position = new Vector3 (OffA [0], 0.5f, OffA [1]);
 				AgalnPro.transform.Rotate (QuatV3);
 				nowAmount++;
-				Debug.Log ("新創");
+				//Debug.Log ("新創");
 			}
-		}else {
-			Debug.Log ("滿人");
 		}
 
 	}
