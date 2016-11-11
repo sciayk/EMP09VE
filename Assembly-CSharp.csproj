@@ -50,7 +50,8 @@
      <Compile Include="Assets\Script\AI\Manager.cs" />
      <Compile Include="Assets\Script\AI\Move.cs" />
      <Compile Include="Assets\Script\AI\Obstacle.cs" />
-     <Compile Include="Assets\Script\Data\ModoData.cs" />
+     <Compile Include="Assets\Script\Data\ModelData.cs" />
+     <Compile Include="Assets\Script\Data\SoildTerr.cs" />
      <Compile Include="Assets\Script\GameCenter.cs" />
      <Compile Include="Assets\Script\GameLoop\GameLoop.cs" />
      <Compile Include="Assets\Script\KeywordManager.cs" />
