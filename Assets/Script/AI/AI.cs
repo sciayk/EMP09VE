@@ -11,6 +11,13 @@ public class AI {
 		} else if (fSpeed < 0.0f) {
 			fSpeed = 0.0f;
 		}
+		Vector3 vTar = agent.m_vTargetPos - agent.m_AgentTrans.position;
+		float fDist = vTar.magnitude;
+		if (fDist < agent.m_fAttackRange) {
+			agent.m_bFight = true;
+			forceVec = vTar;
+			fSpeed = 0.0f;
+		}
 //		Debug.Log ("Speed: " + fSpeed);
 		agent.m_fSpeed = fSpeed;
 
@@ -34,12 +41,7 @@ public class AI {
 	public static Vector3 Seek (Vector3 targetPos, ref Agent agent) {
 		Vector3 seekVec = targetPos - agent.m_AgentTrans.position;
 		seekVec.y = 0.0f;
-//		float fSpeed = seekVec.magnitude;
-//		if (fSpeed > agent.m_fMaxSpeed) {
-//			fSpeed = agent.m_fMaxSpeed;
-//		}
-//		seekVec.Normalize ();
-//		seekVec *= fSpeed;
+
 		// seek方向
 		Debug.DrawLine (agent.m_AgentTrans.position, agent.m_AgentTrans.position + seekVec, Color.red);
 		return seekVec;
@@ -80,8 +82,7 @@ public class AI {
 			Vector3 vForward = curForward * Vector3.Dot (vec, curForward);
 			Vector3 vRot = vForward - vec;
 			vRot.y = 0.0f;
-			vRot.Normalize ();
-			if (fProjDist2 == 0.0f) {
+			vRot.Normalize ();	if (fProjDist2 == 0.0f) {
 				vRot = Vector3.right;
 			}
 			// 距離越近轉向力越大
@@ -94,131 +95,137 @@ public class AI {
 		}
 	}
 
-	private static Vector3 Separation (ref Agent agent) {
+	public static Vector3 Flocking (ref Agent agent) {
+		return SeparationAndCohesion (ref agent);
+	}
+
+	public static Vector3? FindEnemy (ref Agent agent) {
+		// find the closest enemy
 		Vector3 curPos = agent.m_AgentTrans.position;
 		Vector3 curForward = agent.m_AgentTrans.forward;
 		Vector3 curVec;
-		Vector3 separateVec = Vector3.zero;
+		Vector3? targetPos = null;
 		float fDist;
-		float fDot;
-		int iCount = 0;
+		float fMiniDist = 10000.0f;
+		var agentList = Manager.Instance ().GetEnemyList ();
+		if (agent.m_iTeam == 1) {
+			agentList = Manager.Instance ().GetAgentList ();
+		}
+
+		foreach (Agent a in agentList) {
+			curVec = a.m_AgentTrans.position - curPos;
+			fDist = curVec.magnitude;
+			if (fDist < agent.m_fNeighborRange) {
+				if (fDist < fMiniDist) {
+					fMiniDist = fDist;
+					targetPos = a.m_AgentTrans.position;
+				}
+			}
+		}
+
+		return targetPos;
+	}
+
+	private static Vector3 SeparationAndCohesion (ref Agent agent) {
+		Vector3 curPos = agent.m_AgentTrans.position;
+		Vector3 curForward = agent.m_AgentTrans.forward;
+		Vector3 curVec;
+		Vector3 separateVec = new Vector3 (0.0f, 0.0f, 0.0f);
+		Vector3 cohesionVec = new Vector3 (0.0f, 0.0f, 0.0f);
+		Vector3 centralPos = new Vector3 (0.0f, 0.0f, 0.0f);
+		float fDist;
+//		float fDot;
+		int iSepCount = 0;
+		int iCohCount = 0;
 		var agentList = Manager.Instance ().GetAgentList ();
+		// 只找各自隊伍的小兵
+		if (agent.m_iTeam == 1) {
+			agentList = Manager.Instance ().GetEnemyList ();
+		}
 		// find neighborhood
 		foreach (Agent a in agentList) {
-			if (a.m_iIndex == agent.m_iIndex || a.m_iTeam != agent.m_iTeam) {	// 不考慮自己與敵隊
+			// 不考慮自己
+			if (a.m_iIndex == agent.m_iIndex) {	
 				continue;
 			}
 			curVec = a.m_AgentTrans.position - curPos;
 			fDist = curVec.magnitude;
-			if (fDist < 3) {
+			if (fDist < agent.m_fNeighborRange) {
 				curVec.Normalize ();
-				fDot = Vector3.Dot (curVec, curForward);
-//				if (fDot > Mathf.Cos (agent.m_fSightAngle * Mathf.Deg2Rad)) {	// 不考慮視角外的鄰居
+//				fDot = Vector3.Dot (curVec, curForward);
+				//				if (fDot > Mathf.Cos (agent.m_fSightAngle * Mathf.Deg2Rad)) {	// 不考慮視角外的鄰居
+				// Separation
+				if (!a.m_sAgentType.Equals (agent.m_sAgentType)) {
 					curVec /= fDist;
 					separateVec -= curVec;
-					iCount++;
-//				}
+					iSepCount++;
+				} else {	// Cohesion and Separation
+					curVec /= fDist;
+					separateVec -= curVec;
+					iSepCount++;
+					if (!agent.m_bDiscover) {
+						centralPos += a.m_AgentTrans.position;
+						iCohCount++;
+					}
+				}
+				//				}
 			}
 		}
-		if (iCount > 0) {
-			separateVec /= iCount;
+
+		if (iSepCount > 0) {
+			separateVec /= iSepCount;
 			separateVec.y = 0.0f;
-//			float fSpeed = separateVec.magnitude;
-//			if (fSpeed > agent.m_fMaxSpeed) {
-//				fSpeed = agent.m_fMaxSpeed;
-//			}
-//			separateVec.Normalize ();
-//			separateVec *= fSpeed;
-		} 
-
-		return separateVec;
-	}
-
-	private static Vector3 Cohesion (ref Agent agent) {
-		Vector3 curPos = agent.m_AgentTrans.position;
-		Vector3 curForward = agent.m_AgentTrans.forward;
-		Vector3 curVec;
-		Vector3 centralPos = Vector3.zero;
-		float fDist;
-		float fDot;
-		int iCount = 0;
-		var agentList = Manager.Instance ().GetAgentList ();
-		// find neighborhood
-		foreach (Agent a in agentList) {
-			if (a.m_iIndex == agent.m_iIndex || a.m_iTeam != agent.m_iTeam || !a.m_sAgentType.Equals(agent.m_sAgentType)) {	// 不考慮自己與敵隊
-				continue;
-			}
-			curVec = a.m_AgentTrans.position - curPos;
-			fDist = curVec.magnitude;
-			if (fDist < agent.m_fNeighborRange) {
-				curVec.Normalize ();
-				fDot = Vector3.Dot (curVec, curForward);
-//				if (fDot > Mathf.Cos (agent.m_fSightAngle * Mathf.Deg2Rad)) {	// 不考慮視角外的鄰居
-					centralPos += a.m_AgentTrans.position;
-					iCount++;
-//				}
-			}
+			separateVec *= agent.m_fSeparationFactor;
 		}
-
-		if (iCount > 0) {
+		if (iCohCount > 0) {
 			// central position of neighborhood
-			centralPos /= iCount;
+			centralPos /= iCohCount;
 			// seek the central position
-			return Seek (centralPos, ref agent);
-		} else {
-			return Vector3.zero;
-		}
-	}
-
-	private static Vector3 Alignment (ref Agent agent) {
-		Vector3 curPos = agent.m_AgentTrans.position;
-		Vector3 curForward = agent.m_AgentTrans.forward;
-		Vector3 curVec;
-		Vector3 alignVec = Vector3.zero;
-		float fDist;
-		float fDot;
-		int iCount = 0;
-		var agentList = Manager.Instance ().GetAgentList ();
-		// find neighborhood
-		foreach (Agent a in agentList) {
-			if (a.m_iIndex == agent.m_iIndex || a.m_iTeam != agent.m_iTeam || !a.m_sAgentType.Equals(agent.m_sAgentType)) {	// 不考慮自己與敵隊
-				continue;
-			}
-			curVec = a.m_AgentTrans.position - curPos;
-			fDist = curVec.magnitude;
-			if (fDist < agent.m_fNeighborRange) {
-				alignVec += a.m_AgentTrans.forward;
-				iCount++;
-			}
-		}
-
-		if (iCount > 0) {
-			alignVec /= iCount;
-			alignVec.y = 0.0f;
-			float fSpeed = alignVec.magnitude;
-			if (fSpeed > agent.m_fMaxSpeed) {
-				fSpeed = agent.m_fMaxSpeed;
-			}
-			alignVec.Normalize ();
-			alignVec *= fSpeed;
-			return alignVec;
-		} else {
-			return Vector3.zero;
-		}
-	}
-
-	public static Vector3 Flocking (ref Agent agent) {
-		Vector3 separateVec = Separation (ref agent);
-		Vector3 cohesionVec = Cohesion (ref agent);
-		Vector3 alignVec = Alignment (ref agent);
-
-		separateVec *= agent.m_fSeparationFactor;
-		cohesionVec *= agent.m_fCohesionFactor;
-		alignVec *= agent.m_fAlignmentFactor;
+			cohesionVec = Seek (centralPos, ref agent);
+			cohesionVec *= agent.m_fCohesionFactor;
+		} 
 		// 排斥力
 		Debug.DrawLine (agent.m_AgentTrans.position, agent.m_AgentTrans.position + separateVec, Color.magenta);
-		// alignment 
-		Debug.DrawLine (agent.m_AgentTrans.position, agent.m_AgentTrans.position + alignVec, Color.yellow);
-		return separateVec + cohesionVec + alignVec;
+
+		return separateVec + cohesionVec;
 	}
+
+
+	//	private static Vector3 Alignment (ref Agent agent) {
+	//		Vector3 curPos = agent.m_AgentTrans.position;
+	//		Vector3 curForward = agent.m_AgentTrans.forward;
+	//		Vector3 curVec;
+	//		Vector3 alignVec = Vector3.zero;
+	//		float fDist;
+	//		float fDot;
+	//		int iCount = 0;
+	//		var agentList = Manager.Instance ().GetAgentList ();
+	//		// find neighborhood
+	//		foreach (Agent a in agentList) {
+	//			if (a.m_iIndex == agent.m_iIndex || a.m_iTeam != agent.m_iTeam || !a.m_sAgentType.Equals(agent.m_sAgentType)) {	// 不考慮自己與敵隊
+	//				continue;
+	//			}
+	//			curVec = a.m_AgentTrans.position - curPos;
+	//			fDist = curVec.magnitude;
+	//			if (fDist < agent.m_fNeighborRange) {
+	//				alignVec += a.m_AgentTrans.forward;
+	//				iCount++;
+	//			}
+	//		}
+	//
+	//		if (iCount > 0) {
+	//			alignVec /= iCount;
+	//			alignVec.y = 0.0f;
+	//			float fSpeed = alignVec.magnitude;
+	//			if (fSpeed > agent.m_fMaxSpeed) {
+	//				fSpeed = agent.m_fMaxSpeed;
+	//			}
+	//			alignVec.Normalize ();
+	//			alignVec *= fSpeed;
+	//			return alignVec;
+	//		} else {
+	//			return Vector3.zero;
+	//		}
+	//	}
+
 }
