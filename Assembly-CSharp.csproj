@@ -54,7 +54,6 @@
      <Compile Include="Assets\Script\Data\ModelData.cs" />
      <Compile Include="Assets\Script\Data\SoildTerr.cs" />
      <Compile Include="Assets\Script\GameCenter.cs" />
-     <Compile Include="Assets\Script\GameLoop\GameLoop.cs" />
      <Compile Include="Assets\Script\KeywordManager.cs" />
      <Compile Include="Assets\Script\Magic\MagicSet.cs" />
      <Compile Include="Assets\Script\ObjPoor\ObjPoor.cs" />
