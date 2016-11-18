@@ -18,7 +18,10 @@ public class SoildTerr  {
 	public int SetGetNowHp{set{ if (value > mMaxHp)
 			mNowHp = mMaxHp;
 			else {
-				mNowHp = value;}} get{ return mNowHp;}}
+				if (value < 0) {
+					mNowHp = 0;
+				}
+		mNowHp = value;}} get{ return mNowHp;}}
 	public int GetMaxHp{get{ return mMaxHp; }}
 	public float SetGetNowSpeed{set{if (value > mMaxSpeed)
 				mNowSpeed = mMaxSpeed;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SoildStart  {
 
@@ -14,6 +15,10 @@ public class SoildStart  {
 	ObjPoor theObjPoor2= new ObjPoor();
 	ObjPoor theObjPoor3= new ObjPoor();
 	ObjPoor theObjPoor4= new ObjPoor();
+
+	List<GameObject> InitMySoild = new List<GameObject>();
+	List<GameObject> InitEmemySoild = new List<GameObject> ();
+
 
 	public void AwakeCreat(){
 		for(int i =0;i<theBornFactory1.GetFMax;i++){
@@ -65,12 +70,44 @@ public class SoildStart  {
 		}
 	}
 
-	public void Init(int CallAmount){
-		for (int i = 0; i < CallAmount; i++) {
-			theObjPoor1.Poor2Pull ();
-			theObjPoor2.Poor2Pull ();
-			theObjPoor3.Poor2Pull ();
-			theObjPoor4.Poor2Pull ();
+	public void Init(int CallAmount,int PoorMember){
+
+		switch (PoorMember) {
+		case 1:
+			for (int i = 0; i < CallAmount; i++) {
+				SaveLiveSoildPoor(theObjPoor1.Poor2Pull ());
+			}
+			break;
+		case 2:
+			for (int i = 0; i < CallAmount; i++) {
+				SaveLiveSoildPoor(theObjPoor2.Poor2Pull ());
+			}
+			break;
+		case 3:
+			for (int i = 0; i < CallAmount; i++) {
+				SaveLiveSoildPoor(theObjPoor3.Poor2Pull ());
+			}
+			break;
+		case 4:
+			for (int i = 0; i < CallAmount; i++) {
+				SaveLiveSoildPoor(theObjPoor4.Poor2Pull ());
+			}
+			break;
+		default:
+			Debug.Log ("沒有這角色");
+			break;
+		}
+	
+	}
+
+	void SaveLiveSoildPoor(GameObject GB){
+		if (GB.GetComponent<Main> ().mTeam == 0) {
+			InitMySoild.Add (GB);
+		} else if (GB.GetComponent<Main> ().mTeam == 1) {
+			InitEmemySoild.Add (GB);
 		}
 	}
+
+
+
 }

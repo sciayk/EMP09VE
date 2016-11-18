@@ -25,12 +25,14 @@ public class ObjPoor {
 		nowAmount--;
 	}
 	//拉出物件池
-	public void Poor2Pull(){
+	public GameObject Poor2Pull(){
+		GameObject AgalnPro=null;
 		if (GameObjPoor.Count > 0) {
-			GameObject AgalnPro = GameObjPoor.Dequeue ();
+			AgalnPro = GameObjPoor.Dequeue ();
 			AgalnPro.SetActive (true);
 			nowAmount++;
 		} 
+		return AgalnPro;
 	}
 
 	public void ReCallSoild(){
