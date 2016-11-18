@@ -33,17 +33,43 @@ public class GameCenter : MonoBehaviour {
 			theSoildStart.Init (10,2);
 			theSoildStart.Init (10,3);
 			theSoildStart.Init (10,4);
+			ShowListCount ();
+			theSoildStart.ShowPoorCount();
+
+		}
+		if (Input.GetKeyUp (KeyCode.W)) {
+			GameObject a = GameObject.Find ("Cube1(Clone)");
+			GameCenter.mGameCenter().SoildDie (a);
+			 a = GameObject.Find ("Cube2(Clone)");
+			GameCenter.mGameCenter().SoildDie (a);
+			 a = GameObject.Find ("Cube3(Clone)");
+			GameCenter.mGameCenter().SoildDie (a);
+			 a = GameObject.Find ("Cube4(Clone)");
+			GameCenter.mGameCenter().SoildDie (a);
+
+			ShowListCount ();
+			theSoildStart.ShowPoorCount();
 		}
 	}
+	void ShowListCount(){
+		Debug.Log ("MyCount: "+GameCenter.mGameCenter().GetMyListMember().Count);
+		Debug.Log ("EmemyCount: "+GameCenter.mGameCenter().GetEmemySoildMember().Count);
+	}
+
 	public void SaveLiveSoildPoor(GameObject GB){
-		if (GB.GetComponent<Main> ().mTeam == 1) {
+		if (GB.GetComponent<Main> ().mTeam == 0) {
 			InitMySoild.Add (GB);
-		} else if (GB.GetComponent<Main> ().mTeam == 2) {
+		} else if (GB.GetComponent<Main> ().mTeam == 1) {
 			InitEmemySoild.Add (GB);
 		}
 	}
 
 	public void SoildDie(GameObject GG){
+		if (GG.GetComponent<Main>().mTeam == 0) {
+			InitMySoild.Remove (GG);
+		}else if (GG.GetComponent<Main>().mTeam == 1) {
+			InitEmemySoild.Remove (GG);
+		}
 		theSoildStart.ReSoure (GG);
 	}
 

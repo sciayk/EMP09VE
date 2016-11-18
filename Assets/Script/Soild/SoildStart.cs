@@ -79,16 +79,16 @@ public class SoildStart  {
 	public void ReSoure(GameObject ReSoildGB){
 
 		switch (ReSoildGB.name) {
-		case "Cube1":
+		case "Cube1(Clone)":
 			theObjPoor1.Push2Poor (ReSoildGB);
 			break;
-		case "Cube2":
+		case "Cube2(Clone)":
 			theObjPoor2.Push2Poor (ReSoildGB);
 			break;
-		case "Cube3":
+		case "Cube3(Clone)":
 			theObjPoor3.Push2Poor (ReSoildGB);
 			break;
-		case "Cube4":
+		case "Cube4(Clone)":
 			theObjPoor4.Push2Poor (ReSoildGB);
 			break;
 		default:
@@ -98,7 +98,12 @@ public class SoildStart  {
 
 	}
 
-
+	public void ShowPoorCount(){
+		Debug.Log ("Poor1: "+theObjPoor1.GetPoorCount);
+		Debug.Log ("Poor2: "+theObjPoor2.GetPoorCount);
+		Debug.Log ("Poor3: "+theObjPoor3.GetPoorCount);
+		Debug.Log ("Poor4: "+theObjPoor4.GetPoorCount);
+	}
 
 
 
