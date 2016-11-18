@@ -11,12 +11,13 @@ public class AI {
 		} else if (fSpeed < 0.0f) {
 			fSpeed = 0.0f;
 		}
-		Vector3 vTar = agent.m_vTargetPos - agent.m_AgentTrans.position;
-		float fDist = vTar.magnitude;
-		if (fDist < agent.m_fAttackRange) {
-			agent.m_bFight = true;
-			forceVec = vTar;
+
+		if (isAttack (agent)) {
+			agent.m_bAttack = true;
+			forceVec = agent.m_TargetAgent.m_AgentTrans.position - agent.m_AgentTrans.position;
 			fSpeed = 0.0f;
+		} else {
+			agent.m_bAttack = false;
 		}
 //		Debug.Log ("Speed: " + fSpeed);
 		agent.m_fSpeed = fSpeed;
@@ -41,7 +42,8 @@ public class AI {
 	public static Vector3 Seek (Vector3 targetPos, ref Agent agent) {
 		Vector3 seekVec = targetPos - agent.m_AgentTrans.position;
 		seekVec.y = 0.0f;
-
+//		seekVec.Normalize ();
+//		seekVec *= agent.m_fMaxSpeed;
 		// seek方向
 		Debug.DrawLine (agent.m_AgentTrans.position, agent.m_AgentTrans.position + seekVec, Color.red);
 		return seekVec;
@@ -99,12 +101,12 @@ public class AI {
 		return SeparationAndCohesion (ref agent);
 	}
 
-	public static Vector3? FindEnemy (ref Agent agent) {
+	public static Agent FindEnemy (ref Agent agent) {
 		// find the closest enemy
 		Vector3 curPos = agent.m_AgentTrans.position;
 		Vector3 curForward = agent.m_AgentTrans.forward;
 		Vector3 curVec;
-		Vector3? targetPos = null;
+		Agent targetAgent = null;
 		float fDist;
 		float fMiniDist = 10000.0f;
 		var agentList = Manager.Instance ().GetEnemyList ();
@@ -118,12 +120,23 @@ public class AI {
 			if (fDist < agent.m_fNeighborRange) {
 				if (fDist < fMiniDist) {
 					fMiniDist = fDist;
-					targetPos = a.m_AgentTrans.position;
+					targetAgent = a;
 				}
 			}
 		}
 
-		return targetPos;
+		return targetAgent;
+	}
+
+	private static bool isAttack (Agent agent) {
+		if (agent.m_TargetAgent != null) {
+			Vector3 vec = agent.m_AgentTrans.position - agent.m_TargetAgent.m_AgentTrans.position;
+			float fDist = vec.magnitude;
+			if ((agent.m_fAttackRange + agent.m_TargetAgent.m_fCollisionRadius) >= fDist) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static Vector3 SeparationAndCohesion (ref Agent agent) {
@@ -134,7 +147,7 @@ public class AI {
 		Vector3 cohesionVec = new Vector3 (0.0f, 0.0f, 0.0f);
 		Vector3 centralPos = new Vector3 (0.0f, 0.0f, 0.0f);
 		float fDist;
-//		float fDot;
+		float fDot;
 		int iSepCount = 0;
 		int iCohCount = 0;
 		var agentList = Manager.Instance ().GetAgentList ();
@@ -152,37 +165,40 @@ public class AI {
 			fDist = curVec.magnitude;
 			if (fDist < agent.m_fNeighborRange) {
 				curVec.Normalize ();
-//				fDot = Vector3.Dot (curVec, curForward);
-				//				if (fDot > Mathf.Cos (agent.m_fSightAngle * Mathf.Deg2Rad)) {	// 不考慮視角外的鄰居
-				// Separation
-				if (!a.m_sAgentType.Equals (agent.m_sAgentType)) {
-					curVec /= fDist;
-					separateVec -= curVec;
-					iSepCount++;
-				} else {	// Cohesion and Separation
-					curVec /= fDist;
-					separateVec -= curVec;
-					iSepCount++;
-					if (!agent.m_bDiscover) {
-						centralPos += a.m_AgentTrans.position;
-						iCohCount++;
+				fDot = Vector3.Dot (curVec, curForward);
+//				if (fDot > Mathf.Cos (agent.m_fSightAngle * Mathf.Deg2Rad)) {	// 不考慮視角外的鄰居
+					// Separation
+					if (!a.m_sAgentType.Equals (agent.m_sAgentType)) {
+//					curVec /= fDist;
+//					separateVec -= curVec;
+						separateVec -= (curVec / fDist);
+						iSepCount++;
+					} else {	// Cohesion and Separation
+//					curVec /= fDist;
+//					separateVec -= curVec;
+						separateVec -= (curVec / fDist);
+						iSepCount++;
+						if (!agent.m_bDiscover) {
+							centralPos += a.m_AgentTrans.position;
+							iCohCount++;
+						}
 					}
-				}
-				//				}
+//				}
 			}
 		}
 
 		if (iSepCount > 0) {
 			separateVec /= iSepCount;
 			separateVec.y = 0.0f;
-			separateVec *= agent.m_fSeparationFactor;
+			separateVec *= agent.m_fMaxSpeed;
+			separateVec *= agent.m_fSeparationWeight;
 		}
 		if (iCohCount > 0) {
 			// central position of neighborhood
 			centralPos /= iCohCount;
 			// seek the central position
 			cohesionVec = Seek (centralPos, ref agent);
-			cohesionVec *= agent.m_fCohesionFactor;
+			cohesionVec *= agent.m_fCohesionWeight;
 		} 
 		// 排斥力
 		Debug.DrawLine (agent.m_AgentTrans.position, agent.m_AgentTrans.position + separateVec, Color.magenta);
