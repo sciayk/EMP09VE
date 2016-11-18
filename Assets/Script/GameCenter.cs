@@ -31,14 +31,20 @@ public class GameCenter : MonoBehaviour {
 		if (Input.GetKey (KeyCode.Q)) {
 			theSoildStart.Init (10,1);
 			theSoildStart.Init (10,2);
+			theSoildStart.Init (10,3);
+			theSoildStart.Init (10,4);
 		}
 	}
 	public void SaveLiveSoildPoor(GameObject GB){
-		if (GB.GetComponent<Main> ().mTeam == 0) {
+		if (GB.GetComponent<Main> ().mTeam == 1) {
 			InitMySoild.Add (GB);
-		} else if (GB.GetComponent<Main> ().mTeam == 1) {
+		} else if (GB.GetComponent<Main> ().mTeam == 2) {
 			InitEmemySoild.Add (GB);
 		}
+	}
+
+	public void SoildDie(GameObject GG){
+		theSoildStart.ReSoure (GG);
 	}
 
 	public List<GameObject> GetMyListMember(){

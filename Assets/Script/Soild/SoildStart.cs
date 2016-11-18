@@ -4,8 +4,6 @@ using System.Collections;
 
 public class SoildStart  {
 
-
-
 	BornFactory theBornFactory1=new BornFactory(new ModoData1 ());
 	BornFactory theBornFactory2=new BornFactory(new ModoData2 ());
 	BornFactory theBornFactory3=new BornFactory(new ModoData3 ());
@@ -15,10 +13,6 @@ public class SoildStart  {
 	ObjPoor theObjPoor2= new ObjPoor();
 	ObjPoor theObjPoor3= new ObjPoor();
 	ObjPoor theObjPoor4= new ObjPoor();
-
-
-
-
 
 	public void AwakeCreat(){
 		for(int i =0;i<theBornFactory1.GetFMax;i++){
@@ -34,40 +28,74 @@ public class SoildStart  {
 		//	Debug.Log (theObjPoor3.GetPoorCount);
 		}
 		for(int i =0;i<theBornFactory4.GetFMax;i++){
-			theObjPoor3.Push2Poor (theBornFactory4.Born ());
+			theObjPoor4.Push2Poor (theBornFactory4.Born ());
 			//Debug.Log (theObjPoor4.GetPoorCount);
 		}
 	}
 
 
 	public void Init(int CallAmount,int PoorMember){
-
+		
 		switch (PoorMember) {
 		case 1:
-			for (int i = 0; i < CallAmount; i++) {
-				GameCenter.mGameCenter().SaveLiveSoildPoor(theObjPoor1.Poor2Pull ());
-			}
+			if (theObjPoor1.GetPoorCount >= 0) {
+				for (int i = 0; i < CallAmount; i++) {
+					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor1.Poor2Pull ());
+				}
+			} else {
+				Debug.Log ("沒人了");}
 			break;
 		case 2:
-			for (int i = 0; i < CallAmount; i++) {
-				GameCenter.mGameCenter().SaveLiveSoildPoor(theObjPoor2.Poor2Pull ());
-			}
+			if (theObjPoor2.GetPoorCount >= 0) {
+				for (int i = 0; i < CallAmount; i++) {
+					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor2.Poor2Pull ());
+				}
+			}else {
+				Debug.Log ("沒人了");}
 			break;
 		case 3:
-			for (int i = 0; i < CallAmount; i++) {
-				GameCenter.mGameCenter().SaveLiveSoildPoor(theObjPoor3.Poor2Pull ());
-			}
+			if (theObjPoor3.GetPoorCount >= 0) {
+				for (int i = 0; i < CallAmount; i++) {
+					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor3.Poor2Pull ());
+				}
+			}else {
+				Debug.Log ("沒人了");}
 			break;
 		case 4:
-			for (int i = 0; i < CallAmount; i++) {
-				GameCenter.mGameCenter().SaveLiveSoildPoor(theObjPoor4.Poor2Pull ());
-			}
+			if (theObjPoor4.GetPoorCount >= 0) {
+				for (int i = 0; i < CallAmount; i++) {
+					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor4.Poor2Pull ());
+				}
+			}else {
+				Debug.Log ("沒人了");}
 			break;
 		default:
 			Debug.Log ("沒有這角色");
 			break;
 		}
 	
+	}
+
+	public void ReSoure(GameObject ReSoildGB){
+
+		switch (ReSoildGB.name) {
+		case "Cube1":
+			theObjPoor1.Push2Poor (ReSoildGB);
+			break;
+		case "Cube2":
+			theObjPoor2.Push2Poor (ReSoildGB);
+			break;
+		case "Cube3":
+			theObjPoor3.Push2Poor (ReSoildGB);
+			break;
+		case "Cube4":
+			theObjPoor4.Push2Poor (ReSoildGB);
+			break;
+		default:
+			Debug.Log ("沒有這物件池");
+			break;
+		}
+
 	}
 
 
