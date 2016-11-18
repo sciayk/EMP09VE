@@ -16,8 +16,8 @@ public class SoildStart  {
 	ObjPoor theObjPoor3= new ObjPoor();
 	ObjPoor theObjPoor4= new ObjPoor();
 
-	List<GameObject> InitMySoild = new List<GameObject>();
-	List<GameObject> InitEmemySoild = new List<GameObject> ();
+	protected List<GameObject> InitMySoild = new List<GameObject>();
+	protected List<GameObject> InitEmemySoild = new List<GameObject> ();
 
 
 	public void AwakeCreat(){
@@ -108,6 +108,12 @@ public class SoildStart  {
 		}
 	}
 
+	public List<GameObject> GetMyListMember(){
+		return InitMySoild;
+	}
 
+	public List<GameObject> GetEmemySoildMember(){
+		return InitEmemySoild;
+	}
 
 }

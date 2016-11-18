@@ -16,6 +16,7 @@ public class GameCenter : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
 		if (Input.GetKey (KeyCode.Q)) {
 			theSoildStart.Init (10,1);
 			theSoildStart.Init (10,2);
