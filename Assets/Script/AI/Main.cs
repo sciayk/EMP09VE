@@ -16,6 +16,9 @@ public class Main : MonoBehaviour {
 	public float m_fCohesionFactor = 0.8f;
 //	public float m_fAlignmentFactor = 0.0f;
 	public int m_iTeam = 0;
+	public int mTeam {
+		get { return m_iTeam; }
+	}
 	public string m_sAgentType = null;
 //	public bool m_bFight = false;
 //	public bool m_bDiscover = false;
@@ -89,6 +92,8 @@ public class Main : MonoBehaviour {
 			yield return new WaitForSeconds (0.02f);
 		}
 	}
+
+
 
 	void OnDrawGizmos () {
 //		// 探針範圍
