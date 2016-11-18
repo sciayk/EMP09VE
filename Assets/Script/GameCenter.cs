@@ -38,13 +38,13 @@ public class GameCenter : MonoBehaviour {
 
 		}
 		if (Input.GetKeyUp (KeyCode.W)) {
-			GameObject a = GameObject.Find ("Cube1(Clone)");
+			GameObject a = GameObject.Find ("Cube1");
 			GameCenter.mGameCenter().SoildDie (a);
-			 a = GameObject.Find ("Cube2(Clone)");
+			 a = GameObject.Find ("Cube2");
 			GameCenter.mGameCenter().SoildDie (a);
-			 a = GameObject.Find ("Cube3(Clone)");
+			 a = GameObject.Find ("Cube3");
 			GameCenter.mGameCenter().SoildDie (a);
-			 a = GameObject.Find ("Cube4(Clone)");
+			 a = GameObject.Find ("Cube4");
 			GameCenter.mGameCenter().SoildDie (a);
 
 			ShowListCount ();

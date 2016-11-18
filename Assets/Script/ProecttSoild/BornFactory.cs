@@ -6,6 +6,7 @@ public class BornFactory :MonoBehaviour {
 	Vector3 VBorn;
 	GameObject Model;
 	GameObject TBornPos;
+	protected string Name;
 	protected string ModelPath;
 	protected string BornPosPath;
 	protected int mMaxAmount=0;
@@ -14,6 +15,7 @@ public class BornFactory :MonoBehaviour {
 	public int GetFStart{get{return mStartAmount; }}
 
 	public BornFactory(ModelDataBase theModelData){
+		Name = theModelData.GetName;
 		ModelPath = theModelData.GetModelName;
 		BornPosPath = theModelData.GetBornPointName;
 		mMaxAmount = theModelData.GetMaxAmount;
@@ -28,6 +30,7 @@ public class BornFactory :MonoBehaviour {
 		TBornPos = Resources.Load (BornPosPath) as GameObject;
 		BornPos (TBornPos.transform);
 		GameObject GB = Instantiate (Model);
+		GB.name = Name;
 		GB.transform.position = VBorn;
 		GB.SetActive (false);
 		return GB;
