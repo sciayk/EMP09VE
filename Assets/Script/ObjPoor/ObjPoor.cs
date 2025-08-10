@@ -35,11 +35,13 @@ public class ObjPoor {
 		return AgalnPro;
 	}
 
-	public void ReCallSoild(){
-		GameObject AgalnPro = GameObjPoor.Dequeue ();
-		AgalnPro.SetActive (true);
-		nowAmount++;
-	}
+        public void ReCallSoild(){
+                if (GameObjPoor.Count > 0) {
+                        GameObject AgalnPro = GameObjPoor.Dequeue ();
+                        AgalnPro.SetActive (true);
+                        nowAmount++;
+                }
+        }
 
 }
 

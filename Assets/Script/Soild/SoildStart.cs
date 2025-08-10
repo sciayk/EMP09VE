@@ -34,47 +34,38 @@ public class SoildStart  {
 	}
 
 
-	public void Init(int CallAmount,int PoorMember){
-		
-		switch (PoorMember) {
-		case 1:
-			if (theObjPoor1.GetPoorCount >= 0) {
-				for (int i = 0; i < CallAmount; i++) {
-					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor1.Poor2Pull ());
-				}
-			} else {
-				Debug.Log ("沒人了");}
-			break;
-		case 2:
-			if (theObjPoor2.GetPoorCount >= 0) {
-				for (int i = 0; i < CallAmount; i++) {
-					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor2.Poor2Pull ());
-				}
-			}else {
-				Debug.Log ("沒人了");}
-			break;
-		case 3:
-			if (theObjPoor3.GetPoorCount >= 0) {
-				for (int i = 0; i < CallAmount; i++) {
-					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor3.Poor2Pull ());
-				}
-			}else {
-				Debug.Log ("沒人了");}
-			break;
-		case 4:
-			if (theObjPoor4.GetPoorCount >= 0) {
-				for (int i = 0; i < CallAmount; i++) {
-					GameCenter.mGameCenter ().SaveLiveSoildPoor (theObjPoor4.Poor2Pull ());
-				}
-			}else {
-				Debug.Log ("沒人了");}
-			break;
-		default:
-			Debug.Log ("沒有這角色");
-			break;
-		}
-	
-	}
+        public void Init(int CallAmount,int PoorMember){
+                ObjPoor pool = null;
+
+                switch (PoorMember) {
+                case 1:
+                        pool = theObjPoor1;
+                        break;
+                case 2:
+                        pool = theObjPoor2;
+                        break;
+                case 3:
+                        pool = theObjPoor3;
+                        break;
+                case 4:
+                        pool = theObjPoor4;
+                        break;
+                default:
+                        Debug.Log ("沒有這角色");
+                        return;
+                }
+
+                for (int i = 0; i < CallAmount; i++) {
+                        GameObject soldier = pool.Poor2Pull ();
+                        if (soldier != null) {
+                                GameCenter.mGameCenter ().SaveLiveSoildPoor (soldier);
+                        } else {
+                                Debug.Log ("沒人了");
+                                break;
+                        }
+                }
+
+        }
 
 	public void ReSoure(GameObject ReSoildGB){
 
